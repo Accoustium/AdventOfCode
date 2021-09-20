@@ -11,7 +11,7 @@ def check_2020(first: int, second: int) -> bool:
 
 
 def main() -> int:
-    data = read_data('data.csv')
+    data = read_data('../data.csv')
     data_copy = data.copy()
 
     for idx, first_int in enumerate(data):
