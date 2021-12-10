@@ -1,8 +1,24 @@
 from day7constants import Crab
 
 
+class NewCrab(Crab):
+    def __init__(self):
+        super(NewCrab, self).__init__()
+
+    def find_diff(self, difference: int = None) -> int:
+        diff = 0
+        if difference is None:
+            difference = self.mean
+
+        for crab in self.crab_list:
+            n = abs(difference - crab)
+            diff += (n * (n + 1)) / 2
+
+        return diff
+
+
 def main() -> int:
-    c = Crab()
+    c = NewCrab()
     print(
         min(
             [

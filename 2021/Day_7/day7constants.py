@@ -15,13 +15,12 @@ class Crab:
     def __repr__(self):
         return f"Crab({self.mean})"
 
-    def find_diff(self, difference: int=None) -> int:
+    def find_diff(self, difference: int = None) -> int:
         diff = 0
         if difference is None:
             difference = self.mean
 
         for crab in self.crab_list:
-            n = abs(difference - crab)
-            diff += (n * (n + 1)) / 2
+            diff += abs(difference - crab)
 
         return diff
