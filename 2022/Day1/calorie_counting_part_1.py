@@ -26,31 +26,23 @@ class Elf:
 
 
 def read_calories_packs():
-    f = open("data.txt", 'r')
-
-    try:
-        while True:
-            calories = []
-            calorie = f.readline()
-
-            while calorie != "\n":
-                if calorie != "":
-                    calories.append(int(calorie))
-                calorie = f.readline()
-
-            yield Elf(calories)
-            continue
-
-    except EOFError:
-        f.close()
+    with open("data.txt", "r") as f:
+        for new_line in f:
+            yield new_line
 
 
 def main():
     most_elf = Elf([])
+    calories = []
 
-    for elf in read_calories_packs():
-        if elf > most_elf:
-            most_elf = elf
+    for calorie in read_calories_packs():
+        if calorie == "\n":
+            elf = Elf(calories)
+            if elf > most_elf:
+                most_elf = elf
+            calories = []
+        else:
+            calories.append(int(calorie))
 
     print(most_elf.calories)
 
