@@ -1,27 +1,36 @@
 from typing import *
 
 
-TunnelAlias = "Tunnel"
+CaveAlias = "Cave"
 MapAlias = "Map"
 
 
-class Tunnel:
+class Cave:
     def __init__(self, name: AnyStr):
         self.name = name
         self.big = name.isupper()
         self.traveled = False
-        self.connection = list()
+        self.connection = set()
 
     def __repr__(self) -> AnyStr:
         return f"Tunnel({self.name}, big?={self.big})"
 
     def __hash__(self) -> AnyStr:
-        return self.name
+        return hash(self.name)
 
-    def add_connection(self, tunnel: TunnelAlias):
-        self.connection.append(tunnel)
+    def __eq__(self, other):
+        if (
+            self.name == other.name and
+            self.big == other.big and
+            self.traveled == other.traveled
+        ):
+            return True
+        return False
 
-    def find_tunnel(self, tunnel_name: AnyStr) -> TunnelAlias:
+    def add_connection(self, tunnel: CaveAlias):
+        self.connection.add(tunnel)
+
+    def find_tunnel(self, tunnel_name: AnyStr) -> CaveAlias:
         return_tun = None
         if self.name == tunnel_name:
             return_tun = self
@@ -38,16 +47,18 @@ class Tunnel:
 class Map:
     def __init__(self):
         self.data = {}
-        self.start: Optional[Tunnel] = None
+        self.start: Optional[Cave] = None
 
     def add_route(self, start: AnyStr, stop: AnyStr):
-        if start not in self.data.keys():
-            self.data[start] = list()
-        if stop not in self.data.keys():
-            self.data[stop] = list()
-        self.data[start].append(stop)
+        _start, _stop = Cave(start), Cave(stop)
+        if _start not in self.data.keys():
+            self.data[_start] = _start
+        if _stop not in self.data.keys():
+            self.data[_stop] = _stop
+        self.data[_start].add_connection(_stop)
+        self.data[_stop].add_connection(_start)
 
-    def find_tunnel(self, tunnel_name: AnyStr) -> Tunnel:
+    def find_tunnel(self, tunnel_name: AnyStr) -> Cave:
         return self.start.find_tunnel(tunnel_name)
 
     def find_paths(self):
@@ -60,6 +71,6 @@ def load_map() -> Map:
         for line in file:
             m.add_route(*line.strip().split("-"))
 
-    m.start = Tunnel('start')
+    m.start = m.data[Cave("start")]
 
     return m
