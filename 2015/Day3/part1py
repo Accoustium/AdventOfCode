@@ -1,0 +1,29 @@
+import sys
+import os
+
+file_path = os.path.dirname(os.path.abspath(__file__))
+
+def read_data():
+    with open(os.path.join(file_path,'data.txt')) as f:
+        data = f.read().splitlines()
+    return data
+
+def get_houses(data):
+    houses = {(0, 0)}
+    x, y = 0, 0
+    for direction in data[0]:
+        if direction == '^':
+            y += 1
+        elif direction == 'v':
+            y -= 1
+        elif direction == '>':
+            x += 1
+        elif direction == '<':
+            x -= 1
+        houses.add((x, y))
+    return houses
+
+if __name__ == "__main__":
+    data = read_data()
+    houses = get_houses(data)
+    print(len(houses))
